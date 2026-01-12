@@ -1,0 +1,30 @@
+<h1>Vijesti</h1>
+
+<p><a href="{% url 'homepage' %}">← Home</a></p>
+
+<div>
+  <strong>Kategorije:</strong>
+  <a href="{% url 'news_list' %}">Sve</a>
+  {% for c in categories %}
+    | <a href="{% url 'news_list' %}?category={{ c.id }}">{{ c.name }}</a>
+  {% endfor %}
+</div>
+
+{% if selected_category %}
+  <p>Filtrirano po: <strong>{{ selected_category.name }}</strong></p>
+{% endif %}
+
+<hr>
+
+{% for n in news_list %}
+  <article>
+    <h2><a href="{% url 'news_detail' n.pk %}">{{ n.title }}</a></h2>
+    <p>{{ n.created_at }}</p>
+    {% if n.image %}
+      <img src="{{ n.image.url }}" alt="{{ n.title }}" style="max-width: 320px;">
+    {% endif %}
+  </article>
+  <hr>
+{% empty %}
+  <p>Nema vijesti.</p>
+{% endfor %}

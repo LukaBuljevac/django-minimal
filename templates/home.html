@@ -1,0 +1,37 @@
+<h1>Homepage</h1>
+
+<nav>
+  <a href="{% url 'news_list' %}">Vijesti</a>
+
+  {% if user.is_staff %}
+    | <a href="{% url 'news_create' %}">Nova vijest</a>
+  {% endif %}
+
+  | {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Odjava</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Prijava</a>
+    {% endif %}
+</nav>
+
+
+<hr>
+
+<h3>Zadnjih 5 favorita</h3>
+
+{% if user.is_authenticated %}
+  {% if favorite_news %}
+    <ul>
+      {% for n in favorite_news %}
+        <li><a href="{% url 'news_detail' n.pk %}">{{ n.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Nema favorita.</p>
+  {% endif %}
+{% else %}
+  <p>Prijavi se da vidiš favorite.</p>
+{% endif %}

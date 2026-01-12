@@ -1,0 +1,37 @@
+<p>
+  <a href="{% url 'news_list' %}">← Sve vijesti</a>
+  | <a href="{% url 'homepage' %}">Home</a>
+</p>
+
+<h1>{{ news.title }}</h1>
+<p>{{ news.created_at }}</p>
+
+{% if news.image %}
+  <img src="{{ news.image.url }}" alt="{{ news.title }}" style="max-width: 520px;">
+{% endif %}
+
+<div>
+  {{ news.text|linebreaks }}
+</div>
+
+<p>
+  Kategorije:
+  {% for c in news.categories.all %}
+    <span>{{ c.name }}</span>
+  {% empty %}
+    <span>-</span>
+  {% endfor %}
+</p>
+
+{% if user.is_authenticated %}
+  {% if is_favorited %}
+    <p>✅ Već u favoritima</p>
+  {% else %}
+    <form method="post" action="{% url 'news_favorite_add' news.pk %}">
+      {% csrf_token %}
+      <button type="submit">Dodaj u favorite</button>
+    </form>
+  {% endif %}
+{% else %}
+  <p>Prijavi se da možeš dodati u favorite.</p>
+{% endif %}
